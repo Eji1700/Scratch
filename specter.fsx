@@ -39,7 +39,9 @@ let headersFooters =
     |> Array.map( fun (header, footer) ->
         TableColumn(header).MyFooter(footer).Centered().MyWidth(5).MyPadding(0) )
 let cellBlank = @"     "
-let cellLine = @"  |  "
+let cellHorizontalBorder = @"-----"
+let cellCenterBorder = @"  |  "
+let cellValue = @"| 5 |"
 let cellRightLine = @"  \  "
 let cellLeftLine = @"  /  "
 let coloredCell color cell = $"[default on {color}]{cell}[/]"
@@ -57,10 +59,19 @@ let coloredRow color cell =
         coloredCell color cell |]
 
 let rows = 
-    [|  coloredRow "black" cellBlank
-        coloredRow "black" cellLine
-        coloredRow "black" cellRightLine
-        coloredRow "black" cellLeftLine |]
+    [|  coloredRow "black" cellHorizontalBorder
+        coloredRow "black" cellValue
+        coloredRow "black" cellHorizontalBorder
+        coloredRow "black" cellValue
+        coloredRow "black" cellHorizontalBorder
+        coloredRow "black" cellValue
+        coloredRow "black" cellHorizontalBorder
+        coloredRow "black" cellValue
+        coloredRow "black" cellHorizontalBorder
+        coloredRow "black" cellValue
+        coloredRow "black" cellHorizontalBorder
+        coloredRow "black" cellValue
+        coloredRow "black" cellHorizontalBorder |]
 
 let config = 
     {   Border = TableBorder.Simple
