@@ -1,0 +1,8 @@
+/.ionide
+/bin
+/fsharp-questions.csv
+/obj
+/Packages
+/Program.fs
+/Scratch.fsproj
+/serialization.xml
