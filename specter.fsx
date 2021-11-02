@@ -27,7 +27,8 @@ type TableConfig =
         Rows: string [] [] }
 
 let headersFooters =
-    [|  "1", "1"
+    [|  
+        "1", "1"
         "2", "2"
         "3", "3"
         "4", "4"
@@ -35,43 +36,58 @@ let headersFooters =
         "6", "6"
         "7", "7"
         "8", "8"
-        "9", "9" |]
+        "9", "9" 
+        |]
     |> Array.map( fun (header, footer) ->
-        TableColumn(header).MyFooter(footer).Centered().MyWidth(5).MyPadding(0) )
-let cellBlank = @"     "
-let cellHorizontalBorder = @"-----"
-let cellCenterBorder = @"  |  "
-let cellValue = @"| 5 |"
-let cellRightLine = @"  \  "
-let cellLeftLine = @"  /  "
-let coloredCell color cell = $"[default on {color}]{cell}[/]"
+        TableColumn(header).MyFooter(footer).Centered().MyWidth(5).MyPadding(0))
+let cellBlank = "     "
+let centerCell color value = $"[default on {color}]| {value} |[/]"
+let rightCell color value = $"[default on {color}]| {value} [/][default on {color} bold]|[/]"
+let leftCell color value = $"[default on {color} bold]|[/][default on {color}] {value} |[/]"
+let boldCell color value = $"[default on {color} bold]{value}[/]"
+let cellHorizontalBorder = $"[default on black]\u2014\u2014\u2014\u2014\u2014[/]"
 
+let horizontalBorder color  = 
+    [|  boldCell color cellHorizontalBorder
+        boldCell color cellHorizontalBorder
+        boldCell color cellHorizontalBorder
+        boldCell color cellHorizontalBorder
+        boldCell color cellHorizontalBorder
+        boldCell color cellHorizontalBorder
+        boldCell color cellHorizontalBorder
+        boldCell color cellHorizontalBorder
+        boldCell color cellHorizontalBorder |]
 
-let coloredRow color cell =
-    [|  coloredCell color cell 
-        coloredCell color cell
-        coloredCell color cell
-        coloredCell color cell
-        coloredCell color cell
-        coloredCell color cell
-        coloredCell color cell
-        coloredCell color cell
-        coloredCell color cell |]
+let coloredRow color value =
+    [|  
+        leftCell color value 
+        centerCell color value 
+        rightCell color value
+        leftCell color value 
+        centerCell color value 
+        rightCell color value 
+        leftCell color value 
+        centerCell color value 
+        rightCell color value
+          |]
 
 let rows = 
-    [|  coloredRow "black" cellHorizontalBorder
-        coloredRow "black" cellValue
-        coloredRow "black" cellHorizontalBorder
-        coloredRow "black" cellValue
-        coloredRow "black" cellHorizontalBorder
-        coloredRow "black" cellValue
-        coloredRow "black" cellHorizontalBorder
-        coloredRow "black" cellValue
-        coloredRow "black" cellHorizontalBorder
-        coloredRow "black" cellValue
-        coloredRow "black" cellHorizontalBorder
-        coloredRow "black" cellValue
-        coloredRow "black" cellHorizontalBorder |]
+    [|  
+        horizontalBorder "black"
+        coloredRow "black" 5
+        coloredRow "black" 5
+        coloredRow "black" 5
+        horizontalBorder "black"
+        coloredRow "black" 5
+        coloredRow "black" 5
+        coloredRow "black" 5
+        horizontalBorder "black"
+        coloredRow "black" 5
+        coloredRow "black" 5
+        coloredRow "black" 5
+        horizontalBorder "black"
+        
+    |]
 
 let config = 
     {   Border = TableBorder.Simple
