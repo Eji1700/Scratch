@@ -26,6 +26,19 @@ type TableConfig =
         Headers: TableColumn []
         Rows: string [] [] }
 
+let board = 
+    [|
+        [|1;2;3;4;5;6;7;8;9|]
+        [|1;2;3;4;5;6;7;8;9|]
+        [|1;2;3;4;5;6;7;8;9|]
+        [|1;2;3;4;5;6;7;8;9|]
+        [|1;2;3;4;5;6;7;8;9|]
+        [|1;2;3;4;5;6;7;8;9|]
+        [|1;2;3;4;5;6;7;8;9|]
+        [|1;2;3;4;5;6;7;8;9|]
+        [|1;2;3;4;5;6;7;8;9|]
+    |] |> array2D
+
 let headersFooters =
     [|  
         "1", "1"
@@ -71,6 +84,14 @@ let coloredRow color value =
         rightCell color value
           |]
 
+let createBoard b =
+    b
+    |> Array2D.mapi(fun row col value ->
+         match row with 
+         | 0 | 4 | 8 | 11 -> horizontalBorder "black"
+    )
+
+createBoard board
 let rows = 
     [|  
         horizontalBorder "black"
