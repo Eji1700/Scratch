@@ -6,3 +6,4 @@
 /Program.fs
 /Scratch.fsproj
 /serialization.xml
+.fake
