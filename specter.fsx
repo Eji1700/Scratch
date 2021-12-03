@@ -19,6 +19,12 @@ type TableColumn with
     member this.MyPadding(s: int) =
         this.Padding <- s |> Padding
         this
+
+type Cell =
+    {   Color: string
+        Value: int } 
+
+type RowData = Cell []
  
 type TableConfig = 
     {   Border: TableBorder
@@ -27,21 +33,20 @@ type TableConfig =
         Rows: string [] [] }
 
 let board = 
-    [|
-        [|1;2;3;4;5;6;7;8;9|]
-        [|1;2;3;4;5;6;7;8;9|]
-        [|1;2;3;4;5;6;7;8;9|]
-        [|1;2;3;4;5;6;7;8;9|]
-        [|1;2;3;4;5;6;7;8;9|]
-        [|1;2;3;4;5;6;7;8;9|]
-        [|1;2;3;4;5;6;7;8;9|]
-        [|1;2;3;4;5;6;7;8;9|]
-        [|1;2;3;4;5;6;7;8;9|]
-    |] |> array2D
+    [|  [|0;0;0;0;0;0;0;0;0|]
+        [|0;0;0;0;0;0;0;0;0|]
+        [|0;0;0;0;0;0;0;0;0|]
+        [|0;0;0;0;0;0;0;0;0|]
+        [|0;0;0;0;0;0;0;0;0|]
+        [|0;0;0;0;0;0;0;0;0|]
+        [|0;0;0;0;0;0;0;0;0|]
+        [|0;0;0;0;0;0;0;0;0|]
+        [|0;0;0;0;0;0;0;0;0|] |] 
+    |> array2D
+    |> Array2D.map(fun n -> {Color="Black"; Value=n})
 
 let headersFooters =
-    [|  
-        "1", "1"
+    [|  "1", "1"
         "2", "2"
         "3", "3"
         "4", "4"
@@ -49,65 +54,62 @@ let headersFooters =
         "6", "6"
         "7", "7"
         "8", "8"
-        "9", "9" 
-        |]
+        "9", "9" |]
     |> Array.map( fun (header, footer) ->
         TableColumn(header).MyFooter(footer).Centered().MyWidth(5).MyPadding(0))
-let cellBlank = "     "
+
+let cellBlank = " "
 let centerCell color value = $"[default on {color}]| {value} |[/]"
 let rightCell color value = $"[default on {color}]| {value} [/][default on {color} bold]|[/]"
 let leftCell color value = $"[default on {color} bold]|[/][default on {color}] {value} |[/]"
 let boldCell color value = $"[default on {color} bold]{value}[/]"
 let cellHorizontalBorder = $"[default on black]\u2014\u2014\u2014\u2014\u2014[/]"
 
+let borderType cell = 
+    [|  cell
+        cell
+        cell
+        cell
+        cell
+        cell
+        cell
+        cell
+        cell |]
+
 let horizontalBorder color  = 
-    [|  boldCell color cellHorizontalBorder
-        boldCell color cellHorizontalBorder
-        boldCell color cellHorizontalBorder
-        boldCell color cellHorizontalBorder
-        boldCell color cellHorizontalBorder
-        boldCell color cellHorizontalBorder
-        boldCell color cellHorizontalBorder
-        boldCell color cellHorizontalBorder
-        boldCell color cellHorizontalBorder |]
+    let horizontalCell = boldCell color cellHorizontalBorder 
+    borderType horizontalCell
 
-let coloredRow color value =
+let houseRow left center right =
+    let lv = if left.Value = 0 then cellBlank else left.Value.ToString()
+    let cv = if center.Value = 0 then cellBlank else center.Value.ToString()
+    let rv = if right.Value = 0 then cellBlank else right.Value.ToString()
+    [|  leftCell left.Color lv
+        centerCell center.Color cv
+        rightCell right.Color rv |]
+
+let createRow (cells: RowData) = 
     [|  
-        leftCell color value 
-        centerCell color value 
-        rightCell color value
-        leftCell color value 
-        centerCell color value 
-        rightCell color value 
-        leftCell color value 
-        centerCell color value 
-        rightCell color value
-          |]
+        houseRow cells.[0] cells.[1] cells.[2]
+        houseRow cells.[3] cells.[4] cells.[5]
+        houseRow cells.[6] cells.[7] cells.[8] |]
+    |> Array.concat
 
-let createBoard b =
-    b
-    |> Array2D.mapi(fun row col value ->
-         match row with 
-         | 0 | 4 | 8 | 11 -> horizontalBorder "black"
-    )
-
-createBoard board
 let rows = 
     [|  
         horizontalBorder "black"
-        coloredRow "black" 5
-        coloredRow "black" 5
-        coloredRow "black" 5
+        createRow board.[0, *]
+        createRow board.[1, *]
+        createRow board.[2, *]
         horizontalBorder "black"
-        coloredRow "black" 5
-        coloredRow "black" 5
-        coloredRow "black" 5
+        createRow board.[3, *]
+        createRow board.[4, *]
+        createRow board.[5, *]
         horizontalBorder "black"
-        coloredRow "black" 5
-        coloredRow "black" 5
-        coloredRow "black" 5
-        horizontalBorder "black"
-        
+        createRow board.[6, *]
+        createRow board.[7, *]
+        createRow board.[8, *]
+        horizontalBorder "black"    
     |]
 
 let config = 
